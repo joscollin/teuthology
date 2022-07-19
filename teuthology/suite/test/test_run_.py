@@ -141,6 +141,17 @@ class TestRun(object):
         with pytest.raises(ScheduleFailError):
             self.klass(self.args)
 
+    @patch('teuthology.suite.util.git_ls_remote')
+    def test_teuthology_branch_nonexistent(
+        self,
+        m_git_ls_remote
+    ):
+        config.teuthology_path = None
+        m_git_ls_remote.return_value = None
+        self.args.teuthology_branch = 'no_branch'
+        with pytest.raises(ScheduleFailError):
+            self.klass(self.args)
+
     @patch('teuthology.suite.run.util.fetch_repos')
     @patch('teuthology.suite.run.util.git_branch_exists')
     @patch('teuthology.suite.run.util.package_version_for_hash')
